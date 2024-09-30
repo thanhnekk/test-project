@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .navbar a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .profile-container {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        .profile-info {
+            margin-bottom: 20px;
+        }
+        .profile-info p {
+            margin-bottom: 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        .modal-content input[type=text],
+        .modal-content input[type=email] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .modal-content button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        .modal-content button:hover {
+            background-color: #45a049;
+        }
+        .modal-content .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .modal-content .close:hover,
+        .modal-content .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a href="/home/success">Home</a>
+    <a class="active" href="/profile">Profile</a>
+
+</div>
+<div class="profile-container">
+    <div th:if="${session.role == 'student'}">
+        <h2>Student Profile</h2>
+        <div class="profile-info">
+            <p><strong>Name:</strong> <span th:text="${student.getStudent_Name()}"></span></p>
+            <p><strong>User ID:</strong> <span th:text="${student.student_userid}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${student.student_Email}"></span></p>
+            <p><strong>Address:</strong> <span th:text="${student.student_Address}"></span></p>
+            <p><strong>Phone:</strong> <span th:text="${student.student_Phone}"></span></p>
+        </div>
+    </div>
+    <div th:if="${session.role == 'teacher'}">
+        <h2>Teacher Profile</h2>
+        <div class="profile-info">
+            <p><strong>Name:</strong> <span th:text="${teachers.getTeacher_Name()}"></span></p>
+            <p><strong>User ID:</strong> <span th:text="${teachers.getTeacher_userid()}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${teachers.getTeacher_Email()}"></span></p>
+            <p><strong>Address:</strong> <span th:text="${teachers.getTeacher_Address()}"></span></p>
+            <p><strong>Phone:</strong> <span th:text="${teachers.getTeacher_Phone()}"></span></p>
+        </div>
+    </div>
+</div>
+<script>
+    var modal = document.getElementById('editProfileModal');
+    var btn = document.getElementById("editProfileBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+    document.getElementById("editProfileForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        alert("Changes saved!");
+        modal.style.display = "none";
+    });
+</script>
+
+</body>
+</html>

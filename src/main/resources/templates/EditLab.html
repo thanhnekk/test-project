@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Lab</title>
+</head>
+<body>
+<form action="/labcrud"  id="labForm">
+    <table border="1" style="border-collapse: collapse">
+        <tbody>
+        <tr>
+            <td>Lab Description</td>
+            <td><input type="text" name="Lab_Description" th:value="${lab_detail}" /></td>
+        </tr>
+        <tr>
+            <td>Lab Name</td>
+            <td><input type="text" name="Lab_Name" value="" /></td>
+        </tr>
+        <tr>
+            <td>Lab CreateDate</td>
+            <td><input type="date" name="Lab_CreateDate" value=""  /></td>
+        </tr>
+        <tr>
+            <td>Lab Expired Date</td>
+            <td><input type="date" name="Lab_ExpiredDate" value="" /></td>
+        </tr>
+        <tr>
+            <td>Subject Id</td>
+            <td><input type="text" name="Subject_id"/></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" name="lab_id" th:value="${lab_id}" /></td>
+        </tr>
+        <tr>
+            <td><button type="submit" name="submit" value="edit">Edit</button></td>
+            <td><button type="reset">Reset</button></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</div>
+</body>
+</html>

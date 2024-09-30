@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Google Font Import - Poppins */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root{
+            /* ===== Colors ===== */
+            --body-color: #E4E9F7;
+            --sidebar-color: #e0e0e0;
+            --primary-color: #695CFE;
+            --primary-color-light: #F6F5FF;
+            --toggle-color: #DDD;
+            --text-color: #707070;
+
+            /* ====== Transition ====== */
+            --tran-03: all 0.2s ease;
+            --tran-03: all 0.3s ease;
+            --tran-04: all 0.3s ease;
+            --tran-05: all 0.3s ease;
+        }
+
+        body{
+            min-height: 100vh;
+            background-color: var(--body-color);
+            transition: var(--tran-05);
+        }
+
+        ::selection{
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        body.dark{
+            --body-color: #18191a;
+            --sidebar-color: #242526;
+            --primary-color: #3a3b3c;
+            --primary-color-light: #3a3b3c;
+            --toggle-color: #fff;
+            --text-color: #ccc;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            position: fixed;
+            top: 60px; /* Đẩy xuống 50px để tránh che mất custom-div */
+            left: 0;
+            height: calc(100% - 50px); /* Còn lại chiều cao của viewport trừ 50px */
+            width: 250px;
+            padding: 10px 14px;
+            background: var(--sidebar-color);
+            transition: var(--tran-05);
+            z-index: 100;
+        }
+        .sidebar.close{
+            width: 88px;
+        }
+
+        /* ===== Reusable code - Here ===== */
+        .sidebar li{
+            height: 50px;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .sidebar header .image,
+        .sidebar .icon{
+            min-width: 60px;
+            border-radius: 6px;
+        }
+
+        .sidebar .icon{
+            min-width: 60px;
+            border-radius: 6px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .sidebar .text,
+        .sidebar .icon{
+            color: var(--text-color);
+            transition: var(--tran-03);
+        }
+
+        .sidebar .text{
+            font-size: 17px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 1;
+        }
+        .sidebar.close .text{
+            opacity: 0;
+        }
+        /* =========================== */
+
+        .sidebar header{
+            position: relative;
+        }
+
+        .sidebar header .image-text{
+            display: flex;
+            align-items: center;
+        }
+        .sidebar header .logo-text{
+            display: flex;
+            flex-direction: column;
+        }
+        header .image-text .name {
+            margin-top: 2px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        header .image-text .profession{
+            font-size: 16px;
+            margin-top: -2px;
+            display: block;
+        }
+
+        .sidebar header .image{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar header .image img{
+            width: 80px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar header .toggle{
+            position: absolute;
+            top: 50%;
+            right: -25px;
+            transform: translateY(-50%) rotate(180deg);
+            height: 25px;
+            width: 25px;
+            background-color: var(--primary-color);
+            color: var(--sidebar-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            cursor: pointer;
+            transition: var(--tran-05);
+        }
+
+        body.dark .sidebar header .toggle{
+            color: var(--text-color);
+        }
+
+        .sidebar.close .toggle{
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        .sidebar .menu{
+            margin-top: 40px;
+        }
+        .sidebar li.search-box input{
+            height: 100%;
+            width: 100%;
+            outline: none;
+            border: none;
+            background-color: var(--primary-color-light);
+            color: var(--text-color);
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 500;
+            transition: var(--tran-05);
+        }
+        .sidebar li a{
+            list-style: none;
+            height: 100%;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: var(--tran-03);
+        }
+
+        .sidebar li a:hover{
+            background-color: var(--primary-color);
+        }
+        .sidebar li a:hover .icon,
+        .sidebar li a:hover .text{
+            color: var(--sidebar-color);
+        }
+        body.dark .sidebar li a:hover .icon,
+        body.dark .sidebar li a:hover .text{
+            color: var(--text-color);
+        }
+        .sidebar .menu-bar{
+            height: calc(100% - 40px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: scroll;
+        }
+        .menu-bar::-webkit-scrollbar{
+            display: none;
+        }
+        .home{
+            position: absolute;
+            top: 0;
+            left: 250px;
+            height: 100vh;
+            width: calc(100% - 250px);
+            background-color: var(--body-color);
+            transition: var(--tran-05);
+        }
+        .home .text{
+            font-size: 30px;
+            font-weight: 500;
+            color: var(--text-color);
+            padding: 12px 60px;
+        }
+
+        .custom-div {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: white;
+            display: flex;
+            justify-content: space-between; /* Căn trái */
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+
+        }
+        .custom-div .image img {
+            height: 55px; /* Chiều cao tối đa của ảnh */
+            width: auto; /* Để giữ tỉ lệ */
+        }
+        .user-dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-dropdown p {
+            margin: 0 10px;
+        }
+
+        .user-dropdown .user {
+            cursor: pointer;
+        }
+
+        .user-dropdown .dropdown-icon {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 40px; /* Vị trí trên cùng */
+            right: 0;
+            min-width: 120px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .user-dropdown-content a {
+            display: block;
+            padding: 10px;
+            text-decoration: none; /* Remove underline */
+            color: var(--text-color); /* Use the text color variable */
+        }
+
+        .user-dropdown-content a:hover {
+            background-color: var(--primary-color); /* Change background on hover */
+            color: #fff; /* Change text color on hover */
+        }
+
+        .sidebar.close ~ .home .custom-div {
+            width: calc(100%);
+        }
+
+        .sidebar.close ~ .home{
+            left: 78px;
+            height: 100vh;
+            width: calc(100%);
+        }
+        body.dark .home .text{
+            color: var(--text-color);
+        }
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .content h1 {
+            font-weight: bold;
+            font-size: 50px;
+            letter-spacing: 5px;
+        }
+
+        .content h3 {
+            font-weight: 300;
+            font-size: 24px;
+        }
+        .custom-div .toggle {
+            margin-right: 30px;
+            font-size: 24px;
+            margin-left: 7px;
+            cursor: pointer;
+            height: 35px;
+            width: 35px; /* Tăng kích thước */
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer p {
+            margin-bottom: 5px;
+        }
+
+        .footer h5 {
+            margin-top: 10px;
+        }
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            text-align: center;
+            color: black;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            margin-top: 60px;
+        }
+        .content {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            background-color: #f9f9f9; /
+        border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        form {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        form input[type="text"],
+        form input[type="date"],
+        form select {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        form input[type="text"]:focus,
+        form input[type="date"]:focus,
+        form select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 7px 10px;
+            margin: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        form button:hover {
+            background-color: darken(var(--primary-color), 10%);
+        }
+        .main-content h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .main-content p {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        .content {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .content th, .content td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .content th {
+            background-color: #f0f0f0;
+        }
+        .header {
+            margin-bottom: 20px;
+            padding: 15px; /* Padding for the header */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background-color: white;
+            border-radius: 6px;
+        }
+        .header h1.lab-name {
+            font-size: 28px; /* Larger font size for lab name */
+            margin: 0; /* Remove default margin */
+            text-align: left; /* Left-align text */
+        }
+
+        .header p.lab-description, .header p.lab-due-date {
+            font-size: 16px;
+            margin: 5px 0; /* Spacing above and below */
+            text-align: left; /* Left-align text */
+        }
+        .modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<nav class="sidebar close">
+    <div class="menu-bar">
+        <div class="menu">
+            <ul class="menu-links">
+                <li class="nav-link">
+                    <a th:href="@{/home/success}">
+                        <i class='bx bx-home-alt icon' ></i>
+                        <span class="text nav-text">Home</span>
+                    </a>
+                </li>
+
+                <li class="nav-link">
+                    <a th:href="@{/course}">
+                        <i class='bx bx bx-book icon' ></i>
+                        <span class="text nav-text">Course</span>
+                    </a>
+                </li>
+
+                <li class="nav-link">
+                    <a href="#">
+                        <i class='bx bx-phone icon'></i>
+                        <span class="text nav-text">Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="bottom-content">
+            <li class="">
+                <a href="/logout">
+                    <i class='bx bx-log-out icon' ></i>
+                    <span class="text nav-text">Logout</span>
+                </a>
+            </li>
+        </div>
+    </div>
+
+</nav>
+
+<section class="home">
+    <div class="custom-div">
+        <div style="display: flex; align-items: center">
+            <i class='bx bx-menu toggle'></i>
+            <div class="image-text">
+                <span class="image">
+                    <img src="../static/logo.png" alt="">
+                </span>
+            </div>
+        </div>
+        <div class="user-dropdown">
+            <p class="user-name" th:text="${session.name}"></p>
+            <a class="user" href="#">
+                <i class='bx bx-chevron-down'></i>
+            </a>
+            <div class="user-dropdown-content">
+                <a th:href="@{/profile}" class="dropdown-icon">Profile</a>
+                <a href="grade" class="dropdown-icon">Grade</a>
+                <a href="/logout" class="dropdown-icon">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content">
+            <div class="header">
+                <h1 class="lab-name">Lab: <span th:text="${lab.lab_Name}"></span></h1>
+                <p class="lab-description">Description: <span th:text="${lab.lab_Description}"></span></p>
+                <p class="lab-due-date">Due Date: <span th:text="${lab.lab_ExpiredDate}"></span></p>
+            </div>
+            <div th:if="${session.role == 'student'}">
+                <form id="submitLabForm" th:action="@{'/viewlab/' + ${labId}}" method="get" onsubmit="setSubmitTime()">
+                    <p style="text-align: left">Your discussion:</p>
+                    <span th:if="${!isExpired}">
+                        <span th:if="${student_grade} != null">
+                             <input type="text" id="submitfile" name="submissionFilePath" th:value="${student_grade.getSubmission_filepath()}" required />
+                            <button type="submit" >Submit</button>
+                        </span>
+                        <span th:if="${student_grade} == null">
+                            <input type="text" name="submissionFilePath" placeholder="Input your link to the submission (e.g., Google Drive, Google Docs...)" required />
+                             <button type="submit" >Submit</button>
+                            </span>
+                         </span>
+                    <span th:if="${isExpired}">
+                         <span th:if="${student_grade} != null">
+                             <input type="text" name="submissionFilePath" th:value="${student_grade.getSubmission_filepath()}" readonly style="background-color: #aaaaaa;" />
+                              <button type="submit" style="background-color: gray;" disabled>Submit</button>
+                         </span>
+                        <span th:if="${student_grade} == null">
+                             <input type="text" name="submissionFilePath" placeholder="Input your link to the submission (e.g., Google Drive, Google Docs...)" readonly style="background-color: #aaaaaa;" />
+                             <button type="submit" style="background-color: gray;" disabled>Submit</button>
+                        </span>
+                    </span>
+                    <input type="hidden" id="submit_time" name="submit_time">
+                </form>
+            </div>
+            <div th:if="${session.role == 'teacher'}">
+                <form th:action="@{'/viewlab/' + ${labId}}" method="get" th:name="form">
+                    <select name="class_view" onchange="myFunction(this)">
+                        <option th:each="t : ${classes}" th:value="${t.getClass_Id()}" th:selected="${t.getClass_Id() == tid}">
+                            <span th:text="${t.getClass_Name()}"></span>
+                        </option>
+                    </select>
+                    <input type="hidden" name="Submit" value="Submit" />
+                </form>
+                <table style="width: 100%; max-width: 800px; margin-top: 30px; border-collapse: collapse; border: 2px solid #707070; background-color: #fff;">
+                    <thead style="background-color: #f0f0f0;">
+                    <tr>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Student ID</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Student Name</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Submission Status</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Submission Time</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Submission FilePath</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Score</th>
+                        <th th:if="${session.role == 'student'}" style="padding: 10px; border: 1px solid #ddd;">Status</th>
+                        <th th:if="${session.role == 'teacher'}" style="padding: 10px; border: 1px solid #ddd;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="n : ${students}" style="border: 1px solid #ddd;">
+                        <td style="padding: 10px; border: 1px solid #ddd;"><span th:text="${n.getStudent_Id()}"></span></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><span th:text="${n.getStudent_Name()}"></span></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <span th:if="${n.getGrades()} != null">
+                                         <span th:if="${#lists.isEmpty(n.getGrades())}">Not Complete</span>
+                                         <span th:if="${!#lists.isEmpty(n.getGrades())}">
+                                                <span th:text="${n.getStatus_by_id(n.getGrades(),labId)}" ></span>
+                                         </span>
+                                    </span>
+                            <span th:if="${n.getGrades()} == null">Not Complete</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <span th:if="${n.getGrades()} != null">
+                                         <span th:if="${#lists.isEmpty(n.getGrades())}">N/A</span>
+                                         <span th:if="${!#lists.isEmpty(n.getGrades())}">
+                                                <span th:text="${n.getSubmit_time_by_id(n.getGrades(),labId)}" ></span>
+                                         </span>
+                                    </span>
+                            <span th:if="${n.getGrades()} == null">N/A</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <span th:if="${n.getGrades()} != null">
+                                         <span th:if="${#lists.isEmpty(n.getGrades())}">N/A</span>
+                                         <span th:if="${!#lists.isEmpty(n.getGrades())}">
+                                                <span th:text="${n.getSubmit_file_by_id(n.getGrades(),labId)}" ></span>
+                                         </span>
+                                    </span>
+                            <span th:if="${n.getGrades()} == null">N/A</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <span th:if="${n.getGrades()} != null">
+                                         <span th:if="${#lists.isEmpty(n.getGrades())}">N/A</span>
+                                         <span th:if="${!#lists.isEmpty(n.getGrades())}">
+                                                <span th:if="${n.getSubmit_score_by_id(n.getGrades(),labId)}!=null" th:text="${n.getSubmit_score_by_id(n.getGrades(),labId)}" ></span>
+                                                <span th:if="${n.getSubmit_score_by_id(n.getGrades(),labId)}==null" >N/A</span>
+                                         </span>
+                            <span th:if="${n.getGrades()} == null">N/A</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                                    <span th:if="${n.getGrades()} != null">
+                                         <span th:if="${!#lists.isEmpty(n.getGrades())}">
+                                                 <i th:if="${n.getSubmit_file_by_id(n.getGrades(),labId)!='N/A'}"  class='bx bxs-star' style="color: green;" onclick="openGradeModal('${n.getStudent_Id()}', '${labId}');"></i>
+                                                 <i th:if="${n.getSubmit_file_by_id(n.getGrades(),labId)=='N/A'}"  class='bx bxs-star' style="color: gray;"></i>
+                                         </span>
+                                        <span th:if="${#lists.isEmpty(n.getGrades())}">
+                                            <i class='bx bxs-star' style="color: gray;"></i>
+                                        </span>
+                                    </span>
+                                    <span th:if="${n.getGrades()} == null">
+                                        <i class='bx bxs-star' style="color: gray;"></i>
+                                    </span>
+                        </td>
+                        <div id="gradeModal" class="modal" style="display: none;">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeGradeModal()">&times;</span>
+                                <h2>Enter Grade</h2>
+                                <form id="gradeForm" th:action="@{'/viewlab/' + ${labId}}">
+                                    <input type="hidden" id="studentId" name="studentId" th:value="${n.getStudent_Id()}" />
+                                    <input type="hidden" id="labId" name="labId" />
+                                    <label for="grade">Grade:</label>
+                                    <select id="grade" name="grade">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                    <button type="submit" name="submitgrade" value="grade">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <p>Email: thanhnthe182548@gmail.com</p>
+        <p>Address: Thach Hoa, Thach That District, HNC</p>
+        <h5>&copy; Copyright 2024. MyLabManager.com</h5>
+    </div>
+</section>
+
+<script>
+    const body = document.querySelector('body'),
+        sidebar = body.querySelector('nav'),
+        toggle = body.querySelector(".toggle");
+
+    toggle.addEventListener("click", () => {
+        sidebar.classList.toggle("close");
+    })
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var dropdowns = document.querySelectorAll('.user-dropdown');
+        dropdowns.forEach(function (dropdown) {
+            var userLink = dropdown.querySelector('.user');
+            var dropdownContent = dropdown.querySelector('.user-dropdown-content');
+
+            userLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+            });
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target)) { // Đóng nếu click bên ngoài dropdown
+                    dropdownContent.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    function myFunction(selectElement) {
+        selectElement.form.submit();
+    }
+
+    function openGradeModal(studentId, labId) {
+        document.getElementById('labId').value = labId;
+        document.getElementById('gradeModal').style.display = 'block';
+    }
+
+    function closeGradeModal() {
+        document.getElementById('gradeModal').style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+        var modal = document.getElementById('gradeModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    function setSubmitTime(event) {
+        var submitTimeField = document.getElementById("submit_time");
+        var currentTime = new Date().toISOString();
+        submitTimeField.value =currentTime;
+    }
+</script>
+
+</body>
+</html>
+
